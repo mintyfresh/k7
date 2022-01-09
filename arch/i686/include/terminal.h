@@ -1,6 +1,8 @@
 #ifndef __TERMINAL_H__
 #define __TERMINAL_H__
 
+#include <stdint.h>
+
 enum TerminalColour
 {
     TERMINAL_BLACK = 0,
@@ -22,6 +24,9 @@ enum TerminalColour
 };
 
 void terminal_clear(void);
+
+void terminal_enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
+void terminal_disable_cursor(void);
 
 void terminal_get_colour(enum TerminalColour* foreground, enum TerminalColour* background);
 void terminal_set_colour(enum TerminalColour foreground, enum TerminalColour background);
