@@ -1,5 +1,10 @@
-OBJECTS = $(ARCH_OBJECTS)
+.DEFAULT_GOAL := all
+
 include arch/i686/i686.mk
+
+CFLAGS := -I include $(CFLAGS)
+
+OBJECTS = $(ARCH_OBJECTS)
 
 .PHONY: all
 all: build/kernel.bin
