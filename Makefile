@@ -9,6 +9,10 @@ OBJECTS = $(ARCH_OBJECTS)
 .PHONY: all
 all: build/kernel.bin
 
+.PHONY: qemu
+qemu: build/kernel.bin
+	qemu-system-i386 -kernel build/kernel.bin
+
 .PHONY: clean
 clean:
 	rm -rf build
