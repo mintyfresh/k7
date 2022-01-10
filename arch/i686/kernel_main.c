@@ -1,4 +1,5 @@
 #include "gdt.h"
+#include "idt.h"
 #include "terminal.h"
 
 void kernel_main(void)
@@ -8,4 +9,7 @@ void kernel_main(void)
 
     gdt_init();
     terminal_write_string("GDT loaded.\n");
+
+    idt_init();
+    terminal_write_string("IDT loaded.\n");
 }
