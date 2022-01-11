@@ -12,4 +12,7 @@ void kernel_main(void)
 
     idt_init();
     terminal_write_string("IDT loaded.\n");
+
+    asm volatile("int $0x3");
+    asm volatile("int $0x4");
 }

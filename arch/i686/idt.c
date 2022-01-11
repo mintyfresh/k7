@@ -44,9 +44,22 @@ static struct IDTEntry idt_encode_entry(void* isr)
     return entry;
 }
 
+void idt_set_entry(unsigned interrupt, void (*isr)(void*))
+{
+    idt[interrupt] = idt_encode_entry(isr);
+}
+
 void idt_init(void)
 {
-    // TODO: Install interrupt handlers.
+    extern void isr_install_handlers(void);
 
+    isr_install_handlers();
     idt_load_descriptor();
+}
+
+#include "terminal.h"
+
+void isr_3_handler(void* _)
+{
+    terminal_write_string("Custom interrupt!\n");
 }
