@@ -1,4 +1,5 @@
 #include <irq.h>
+#include <keyboard.h>
 #include <port_io.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -9,8 +10,6 @@ static inline uint8_t keyboard_scan_code(void)
 {
     return inb(0x60);
 }
-
-extern void keyboard_key_event(uint64_t scan_code);
 
 void isr_33_handler(void* _)
 {
@@ -33,6 +32,6 @@ void isr_33_handler(void* _)
         buffer[8 - i - 1] = 0;
     }
 
-    keyboard_key_event(*((uint64_t*) &buffer));
+    keyboard_key_event(*((scan_code_t*) &buffer));
     irq_ack(KEYBOARD_IRQ);
 }

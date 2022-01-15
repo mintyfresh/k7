@@ -3,6 +3,7 @@
         "*.t": "lua",
         "string.h": "c",
         "terminal.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "port_io.h": "c"
     }
 }
