@@ -1,6 +1,8 @@
-#include "gdt.h"
-#include "idt.h"
-#include "terminal.h"
+#include <gdt.h>
+#include <idt.h>
+#include <irq.h>
+#include <stdlib.h>
+#include <terminal.h>
 
 void kernel_main(void)
 {
@@ -12,7 +14,10 @@ void kernel_main(void)
 
     idt_init();
     terminal_write_string("IDT loaded.\n");
+    
+    irq_init();
+    terminal_write_string("IRQ handlers configured.\n");
 
-    asm volatile("int $0x3");
-    asm volatile("int $0x4");
+    char buffer[33];
+    terminal_write_string(itoa(255, buffer, 2));
 }

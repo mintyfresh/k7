@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.t": "lua",
+        "string.h": "c",
+        "terminal.h": "c",
+        "stdlib.h": "c"
+    }
+}

@@ -9,6 +9,7 @@ do
     echo "void isr_${interrupt}_handler(unsigned interrupt, void* frame)"
     echo "{"
     echo "    terminal_write_string(\"Unhandled interrupt: $interrupt\\n\");"
+    echo "    while (1) { asm volatile(\"cli\"); asm volatile(\"hlt\"); }"
     echo "}"
 
     echo "__attribute__((interrupt))"
