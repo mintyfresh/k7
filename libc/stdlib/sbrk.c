@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-extern void* _kernel_end;
-extern void* _kernel_mapped_end;
+extern void _kernel_end;
+extern void _kernel_mapped_end;
 
 void* sbrk(intptr_t increment)
 {
