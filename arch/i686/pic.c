@@ -9,12 +9,6 @@
 #define PIC2_COMMAND_PORT PIC2
 #define PIC2_DATA_PORT    (PIC2 + 1)
 
-void pic_disable(void)
-{
-    outb(PIC1_DATA_PORT, 0xFF);
-    outb(PIC2_DATA_PORT, 0xFF);
-}
-
 #define ICW1_ICW4      0x01 /* ICW4 (not) needed */
 #define ICW1_SINGLE    0x02 /* Single (cascade) mode */
 #define ICW1_INTERVAL4 0x04 /* Call address interval 4 (8) */
@@ -98,6 +92,12 @@ void pic_clear_mask(uint8_t irq)
 	uint8_t value = inb(port);
 
 	outb(port, value & ~pic_get_mask_bit(irq));
+}
+
+void pic_mask_all(void)
+{
+    outb(PIC1_DATA_PORT, 0xFF);
+    outb(PIC2_DATA_PORT, 0xFF);
 }
 
 static inline uint16_t pic_get_irq_register(uint8_t ocw3)

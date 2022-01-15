@@ -1,17 +1,12 @@
-#include "pic.h"
-#include "terminal.h"
+#include <hal.h>
+#include <pic.h>
+#include <port_io.h>
+#include <stdio.h>
 
 void irq_init(void)
 {
     pic_remap(0x20, 0x28);
-    pic_clear_mask(0);
-    // pic_set_mask(1);
+    pic_mask_all();
 
-    asm volatile("sti");
-}
-
-void isr_32_handler(void* _)
-{
-    terminal_write_string("timer");
-    pic_send_eoi(0);
+    hal_enable_interrupts();
 }

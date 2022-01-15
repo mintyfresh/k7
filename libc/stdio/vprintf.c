@@ -21,6 +21,14 @@ int vprintf(const char* str, va_list args)
                     terminal_write_string(va_arg(args, const char*));
                     break;
 
+                case 'b':
+                    {
+                        char buffer[33];
+                        itoa(va_arg(args, int), buffer, 2);
+                        terminal_write_string(buffer);
+                        break;
+                    }
+
                 case 'd':
                     {
                         char buffer[33];

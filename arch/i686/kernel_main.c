@@ -16,4 +16,9 @@ void kernel_main(void)
     
     irq_init();
     terminal_write_string("IRQ handlers configured.\n");
+
+    for (;;)
+    {
+        asm volatile("hlt");
+    }
 }
