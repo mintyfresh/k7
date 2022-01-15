@@ -37,6 +37,7 @@ int vprintf(const char* str, va_list args)
                         break;
                     }
 
+                case 'p':
                 case 'x':
                     {
                         char buffer[33];
