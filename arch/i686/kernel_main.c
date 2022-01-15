@@ -1,7 +1,6 @@
 #include <gdt.h>
 #include <idt.h>
 #include <irq.h>
-#include <stdlib.h>
 #include <terminal.h>
 
 void kernel_main(void)
@@ -17,7 +16,4 @@ void kernel_main(void)
     
     irq_init();
     terminal_write_string("IRQ handlers configured.\n");
-
-    char buffer[33];
-    terminal_write_string(itoa(255, buffer, 2));
 }
