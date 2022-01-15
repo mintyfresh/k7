@@ -3,6 +3,7 @@
 #include <irq.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <terminal.h>
 
 void kernel_main(void)
 {

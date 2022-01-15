@@ -13,7 +13,7 @@ void* sbrk(intptr_t increment)
     if (new_heap_end > &_kernel_mapped_end)
     {
         printf("Heap overflow!\n");
-        for(;;) { asm volatile("hlt"); }
+        abort();
     }
 
     void* old_heap_end = heap_end;
