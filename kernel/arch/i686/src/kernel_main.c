@@ -1,21 +1,22 @@
 #include <gdt.h>
 #include <idt.h>
 #include <irq.h>
-#include <terminal.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 void kernel_main(void)
 {
     terminal_init();
-    terminal_write_string("Hello, kernel World!\n");
+    printf("Hello, kernel World!\n");
 
     gdt_init();
-    terminal_write_string("GDT loaded.\n");
+    printf("GDT loaded.\n");
 
     idt_init();
-    terminal_write_string("IDT loaded.\n");
+    printf("IDT loaded.\n");
     
     irq_init();
-    terminal_write_string("IRQ handlers configured.\n");
+    printf("IRQ handlers configured.\n");
 
     for (;;)
     {
