@@ -1,5 +1,5 @@
-ARCH_DIR = arch/i686
-ARCH_BUILD_DIR = build/arch
+ARCH_DIR = kernel/arch/i686
+ARCH_BUILD_DIR = build/kernel/arch
 ARCH_INCLUDE = $(ARCH_DIR)/include
 
 ARCH_ASMSOURCES := $(wildcard $(ARCH_DIR)/*.asm)

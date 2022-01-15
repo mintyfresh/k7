@@ -7,5 +7,7 @@ LIBC_OBJECTS := $(addprefix $(LIBC_BUILD_DIR)/, $(notdir $(patsubst %.c,%.o,$(LI
 
 CFLAGS := $(CFLAGS) -I $(LIBC_INCLUDE)
 
+OBJECTS := $(OBJECTS) $(LIBC_OBJECTS)
+
 $(LIBC_BUILD_DIR)/%.o: $(LIBC_DIR)/*/%.c
 	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
