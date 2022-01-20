@@ -8,7 +8,7 @@ KERNEL_OBJECTS := $(addprefix $(KERNEL_BUILD_DIR)/, $(notdir $(patsubst %.c,%.o,
 
 include kernel/arch/i686/i686.mk
 
-CFLAGS := $(CFLAGS) -I $(KERNEL_INCLUDE_DIR)
+CFLAGS := $(CFLAGS) -I $(KERNEL_INCLUDE_DIR) -fstack-protector
 
 OBJECTS := $(OBJECTS) $(ARCH_OBJECTS) $(KERNEL_OBJECTS)
 
