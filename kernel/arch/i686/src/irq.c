@@ -1,10 +1,10 @@
-#include <hal.h>
+#include <idt.h>
+#include <irq.h>
 #include <pic.h>
 #include <port_io.h>
 #include <stdio.h>
 #include <stddef.h>
-#include <idt.h>
-#include <irq.h>
+#include <system.h>
 
 #define IRQ_BASE 0x20
 

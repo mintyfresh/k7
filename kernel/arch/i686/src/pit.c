@@ -35,7 +35,6 @@ void pit_set_frequency(uint32_t frequency)
 static void pit_irq_handler(struct MachineState* _)
 {
     // Nothing to do here.
-    printf("PIT IRQ\n");
 }
 
 void pit_init(void)

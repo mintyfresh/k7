@@ -1,6 +1,7 @@
+#include <idt.h>
 #include <stdint.h>
-
-#include "idt.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #pragma pack(push, 1)
 struct IDTDescriptor
@@ -120,8 +121,61 @@ void idt_init(void)
     idt_load_descriptor();
 }
 
+static char* system_error_names[] = {
+    "Division by zero",
+    "Debug",
+    "Non-maskable interrupt",
+    "Breakpoint",
+    "Overflow",
+    "Bound range exceeded",
+    "Invalid opcode",
+    "Device not available",
+    "Double fault",
+    "Coprocessor segment overrun",
+    "Invalid TSS",
+    "Segment not present",
+    "Stack-Segment Fault",
+    "General Protection Fault",
+    "Page Fault",
+    "Reserved",
+    "x87 FPU Floating-Point Error",
+    "Alignment Check",
+    "Machine Check",
+    "SIMD Floating-Point Exception",
+    "Virtualization Exception",
+    "Control Protection Exception",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Hypervisor Exception",
+    "VMM Communication Exception",
+    "Security Exception",
+    "Reserved",
+};
+
 void isr_handler(struct MachineState* state)
 {
-    printf("Exception: %d\n", state->interrupt);
+    char* system_error_message;
+
+    if (state->interrupt < sizeof(system_error_names) / sizeof(char*))
+    {
+        system_error_message = system_error_names[state->interrupt];
+    }
+    else
+    {
+        system_error_message = "Unknown system error";
+    }
+
+    printf("Exception: %s (Interrupt %d Error code %d)\n", system_error_message, state->interrupt, state->error_code);
+
+    printf("DS: %x ES: %x FS: %x GS: %x SS: %x\n", state->ds, state->es, state->fs, state->gs, state->ss);
+    printf("EBP: %x ESP: %x\n", state->ebp, state->esp);
+    printf("ESI: %x EDI: %x\n", state->esi, state->edi);
+    printf("EAX: %x EBX: %x ECX: %x EDX: %x\n", state->eax, state->ebx, state->ecx, state->edx);
+    printf("EIP: %x CS: %x EFLAGS: %x\n", state->eip, state->cs, state->eflags);
+
     abort();
 }

@@ -29,9 +29,9 @@ struct MachineState
     uint32_t ss;
 };
 
-// typedef void (*isr_t)(struct MachineState*);
+typedef void* isr_t;
 
-void idt_set_entry(uint8_t interrupt, void* handler);
+void idt_set_entry(uint8_t interrupt, isr_t handler);
 
 void idt_init(void);
 
