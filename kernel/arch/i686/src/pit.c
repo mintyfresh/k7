@@ -5,6 +5,7 @@
 #define PIT_IRQ 0x00
 #define PIT_CHANNEL_0 0x40
 #define PIT_COMMAND_REGISTER 0x43
+#define PIT_INPUT_FREQUENCY 1193182
 
 uint16_t pit_get_counter(void)
 {
@@ -26,7 +27,7 @@ void pit_set_counter(uint16_t counter)
 
 void pit_set_frequency(uint32_t frequency)
 {
-    uint16_t counter = 1193182 / frequency;
+    uint16_t counter = PIT_INPUT_FREQUENCY / frequency;
 
     pit_set_counter(counter);
 }
