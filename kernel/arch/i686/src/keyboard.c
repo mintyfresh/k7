@@ -11,7 +11,7 @@ static inline uint8_t keyboard_scan_code(void)
     return inb(0x60);
 }
 
-void isr_33_handler(void* _)
+void keyboard_irq_handler(struct MachineState* _)
 {
     size_t i;
     uint8_t buffer[8];
@@ -33,5 +33,9 @@ void isr_33_handler(void* _)
     }
 
     keyboard_key_event(*((scan_code_t*) &buffer));
-    irq_ack(KEYBOARD_IRQ);
+}
+
+void keyboard_init(void)
+{
+    irq_set_handler(KEYBOARD_IRQ, keyboard_irq_handler);
 }

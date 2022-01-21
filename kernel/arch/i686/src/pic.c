@@ -78,15 +78,7 @@ static inline uint8_t pic_get_mask_bit(uint8_t irq)
     return 1 << (irq & 0b0111);
 }
 
-void pic_set_mask(uint8_t irq)
-{
-	uint16_t port = pic_get_port(irq);
-	uint8_t value = inb(port);
-
-	outb(port, value | pic_get_mask_bit(irq));
-}
-
-void pic_clear_mask(uint8_t irq)
+void pic_enable_irq(uint8_t irq)
 {
 	uint16_t port = pic_get_port(irq);
 	uint8_t value = inb(port);
@@ -94,7 +86,21 @@ void pic_clear_mask(uint8_t irq)
 	outb(port, value & ~pic_get_mask_bit(irq));
 }
 
-void pic_mask_all(void)
+void pic_disable_irq(uint8_t irq)
+{
+	uint16_t port = pic_get_port(irq);
+	uint8_t value = inb(port);
+
+	outb(port, value | pic_get_mask_bit(irq));
+}
+
+void pic_enable_all(void)
+{
+    outb(PIC1_DATA_PORT, 0x00);
+    outb(PIC2_DATA_PORT, 0x00);
+}
+
+void pic_disable_all(void)
 {
     outb(PIC1_DATA_PORT, 0xFF);
     outb(PIC2_DATA_PORT, 0xFF);

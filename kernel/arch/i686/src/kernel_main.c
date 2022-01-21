@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <terminal.h>
+#include <keyboard.h>
+#include <pit.h>
 
 void kernel_main(void)
 {
@@ -18,6 +20,12 @@ void kernel_main(void)
     
     irq_init();
     printf("IRQ handlers configured.\n");
+
+    pit_init();
+    printf("PIT IRQ configured.\n");
+
+    keyboard_init();
+    printf("Keyboard IRQ configured.\n");
 
     for (;;)
     {
