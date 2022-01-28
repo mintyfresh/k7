@@ -19,7 +19,7 @@ static inline size_t terminal_buffer_offset(void)
 
 static inline uint16_t terminal_encode_char(char ch)
 {
-    return (terminal_colour << 8) | (ch & 0xFF);
+    return (terminal_colour << 8) | (ch & UINT8_MAX);
 }
 
 static void terminal_scroll(void)
@@ -46,9 +46,9 @@ static void terminal_update_cursor(void)
     uint16_t offset = terminal_buffer_offset();
 
     outb(0x3D4, 0x0F);
-    outb(0x3D5, (uint8_t)(offset & 0xFF));
+    outb(0x3D5, (uint8_t)((offset >> 0) & UINT8_MAX));
     outb(0x3D4, 0x0E);
-    outb(0x3D5, (uint8_t)((offset >> 8) & 0xFF));
+    outb(0x3D5, (uint8_t)((offset >> 8) & UINT8_MAX));
 }
 
 static void terminal_write_char_impl(char ch)
@@ -116,15 +116,22 @@ void terminal_disable_cursor(void)
     outb(0x3D5, 0x20);
 }
 
+#define FOREGROUND_MASK 0xF0
+#define BACKGROUND_MASK 0x0F
+
+#define FOREGROUND_OFFSET 4
+#define BACKGROUND_OFFSET 0
+
 void terminal_get_colour(enum TerminalColour* foreground, enum TerminalColour* background)
 {
-    *foreground = (terminal_colour >> 4) & 0x0F;
-    *background = terminal_colour & 0x0F;
+    *foreground = (terminal_colour & FOREGROUND_MASK) >> FOREGROUND_OFFSET;
+    *background = (terminal_colour & BACKGROUND_MASK) >> BACKGROUND_OFFSET;
 }
 
 void terminal_set_colour(enum TerminalColour foreground, enum TerminalColour background)
 {
-    terminal_colour = ((foreground & 0x0F) << 4) | (background & 0x0F);
+    terminal_colour = ((foreground << FOREGROUND_OFFSET) & FOREGROUND_MASK) | \
+                      ((background << BACKGROUND_OFFSET) & BACKGROUND_MASK);
 }
 
 void terminal_write_char(char ch)
