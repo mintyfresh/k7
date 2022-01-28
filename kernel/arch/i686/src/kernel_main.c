@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <terminal.h>
+#include <vmm.h>
 
 void kernel_main(uint32_t magic, multiboot_info_t* mbi)
 {
@@ -37,6 +38,8 @@ void kernel_main(uint32_t magic, multiboot_info_t* mbi)
 
     pmm_init(mbi);
     printf("Physical memory manager initialized.\n");
+
+    vmm_init();
 
     for (;;)
     {

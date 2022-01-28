@@ -2,8 +2,10 @@
 
 void* memset(void* dest, int c, size_t n)
 {
-    char* d = dest;
-    while (n--)
-        *d++ = c;
+    for (size_t i = 0; i < n; i++)
+    {
+        ((char*) dest)[i] = c;
+    }
+
     return dest;
 }

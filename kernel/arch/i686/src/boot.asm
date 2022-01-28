@@ -38,7 +38,7 @@ boot_page_directory:
 	; Padding up to last directory entry.
 	times 1023 - 769 dd 0
 	; Map page directory to itself as final page table.
-	dd (boot_page_directory - VIRTUAL_OFFSET) + (PAGE_PRESENT | PAGE_READWRITE | PAGE_LARGE)
+	dd (boot_page_directory - VIRTUAL_OFFSET) + (PAGE_PRESENT | PAGE_READWRITE)
 
 section .text_low
 align 4

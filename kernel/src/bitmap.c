@@ -14,6 +14,9 @@ struct Bitmap
 
 #define BITS_PER_BLOCK 32
 
+#define BLOCK_EMPTY 0xFFFFFFFF
+#define BLOCK_FULL  0x00000000
+
 static inline bitmap_index_t block_and_bit_to_index(uint32_t block, uint32_t bit)
 {
     return block * BITS_PER_BLOCK + bit;
@@ -34,6 +37,9 @@ static inline uint32_t index_to_bit(bitmap_index_t index)
 
 #define is_reserved(bitmap, bit)  (test_bit(bitmap, bit))
 #define is_available(bitmap, bit) (!test_bit(bitmap, bit))
+
+#define is_block_fully_reserved(block)  ((block) == BLOCK_EMPTY)
+#define is_block_fully_available(block) ((block) == BLOCK_FULL)
 
 struct Bitmap* bitmap_create(uint32_t count, bool initially_reserved)
 {
@@ -141,12 +147,14 @@ bool bitmap_is_available_range(struct Bitmap* bitmap, bitmap_index_t index, uint
 
     for (; block < bitmap->length; block++, bit = 0)
     {
-        if (bitmap->bitmap[block] == 0)
+        if (is_block_fully_reserved(bitmap->bitmap[block]))
         {
             return false;
         }
 
-        if (bitmap->bitmap[block] == 0xFFFFFFFF)
+        // If the block is fully available, we don't need to check individual bits.
+        // Just add the number of bits in the block to the found count.
+        if (is_block_fully_available(bitmap->bitmap[block]))
         {
             found += BITS_PER_BLOCK - bit;
 
@@ -156,6 +164,14 @@ bool bitmap_is_available_range(struct Bitmap* bitmap, bitmap_index_t index, uint
             }
 
             continue;
+        }
+        // If we know that the block is already partially reserved,
+        // We can check if it's even possible for that block to fit our needs.
+        // e.g. If we need 33 more bits, and the block is already partially reserved,
+        // we can skip checking bits as we already know there is not enough space.
+        else if (count - found > BITS_PER_BLOCK)
+        {
+            return false;
         }
 
         for (; bit < BITS_PER_BLOCK; bit++)
@@ -181,7 +197,7 @@ void bitmap_set_all(struct Bitmap* bitmap, bool reserved)
 {
     for (uint32_t i = 0; i < bitmap->length; i++)
     {
-        bitmap->bitmap[i] = reserved ? 0xFFFFFFFF : 0;
+        bitmap->bitmap[i] = reserved ? BLOCK_EMPTY : BLOCK_FULL;
     }
 
     if (reserved)
@@ -208,7 +224,7 @@ bool bitmap_first_available(struct Bitmap* bitmap, bitmap_index_t* index)
 
     for (; block < bitmap->length; block++, bit = 0)
     {
-        if (bitmap->bitmap[block] == 0)
+        if (is_block_fully_reserved(bitmap->bitmap[block]))
         {
             continue;
         }
@@ -243,7 +259,7 @@ bool bitmap_first_available_range(struct Bitmap* bitmap, uint32_t count, bitmap_
 
     for (; block < bitmap->length; block++, bit = 0)
     {
-        if (bitmap->bitmap[block] == 0)
+        if (is_block_fully_reserved(bitmap->bitmap[block]))
         {
             continue;
         }
