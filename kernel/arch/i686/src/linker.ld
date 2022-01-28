@@ -9,6 +9,9 @@ SECTIONS
 
 	_kernel_start = .;
 
+	/* End of boot page entries */
+	_kernel_mapped_end = . + 4M;
+
 	.text ALIGN(4) : AT(ADDR(.text) - VIRTUAL_OFFSET)
 	{
 		*(.multiboot)
@@ -36,5 +39,4 @@ SECTIONS
 	}
 
 	_kernel_end = .;
-	_kernel_mapped_end = . + 4M;
 }

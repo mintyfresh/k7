@@ -4,7 +4,7 @@ AS := nasm
 ASFLAGS :=
 
 CC := clang
-CFLAGS := -fno-builtin -ffreestanding -nostdlib -nostdinc++
+CFLAGS := -fno-builtin -ffreestanding -nostdlib -nostdinc++ -O2 -Wall -Wextra
 
 LD := clang
 LDFLAGS := -ffreestanding -nostdlib -nostdinc++

@@ -1,14 +1,15 @@
 #include <gdt.h>
 #include <idt.h>
 #include <irq.h>
+#include <keyboard.h>
+#include <multiboot.h>
+#include <pit.h>
+#include <pmm.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <terminal.h>
-#include <keyboard.h>
-#include <pit.h>
-#include <multiboot.h>
 
-void kernel_main(uint32_t magic, multiboot_info_t* memory_map)
+void kernel_main(uint32_t magic, multiboot_info_t* mbi)
 {
     terminal_init();
     printf("Hello, kernel World!\n");
@@ -33,6 +34,9 @@ void kernel_main(uint32_t magic, multiboot_info_t* memory_map)
 
     keyboard_init();
     printf("Keyboard IRQ configured.\n");
+
+    pmm_init(mbi);
+    printf("Physical memory manager initialized.\n");
 
     for (;;)
     {
