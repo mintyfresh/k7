@@ -4,13 +4,13 @@
 #include "port_io.h"
 #include "terminal.h"
 
-size_t const TERMINAL_HEIGHT = 25;
-size_t const TERMINAL_WIDTH  = 80;
+#define TERMINAL_HEIGHT 25
+#define TERMINAL_WIDTH  80
 
-size_t terminal_row;
-size_t terminal_col;
-uint8_t terminal_colour;
-uint16_t* terminal_buffer;
+static size_t terminal_row;
+static size_t terminal_col;
+static uint8_t terminal_colour;
+static uint16_t* terminal_buffer;
 
 static inline size_t terminal_buffer_offset(void)
 {
