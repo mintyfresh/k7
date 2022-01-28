@@ -24,7 +24,7 @@ $(ARCH_BUILD_DIR)/%.o: $(ARCH_SOURCE_DIR)/%.asm
 	$(AS) $(ASFLAGS) -o $@ $<
 
 $(ARCH_BUILD_DIR)/%.o: $(ARCH_SOURCE_DIR)/%.c
-	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	$(CC) $(CFLAGS) -MMD -MP -MF $(patsubst %.o,%.d,$@) -c $< -o $@
 
 $(ARCH_BUILD_DIR)/%.c: $(ARCH_SOURCE_DIR)/%.c.sh
 	bash -c $< > $@
