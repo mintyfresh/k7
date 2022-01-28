@@ -12,21 +12,21 @@ struct Bitmap
     uint32_t first_free;
 };
 
-#define ELEMENTS_PER_BLOCK 32
+#define BITS_PER_BLOCK 32
 
-static inline bitmap_index_t block_bit_to_index(uint32_t block, uint32_t bit)
+static inline bitmap_index_t block_and_bit_to_index(uint32_t block, uint32_t bit)
 {
-    return block * ELEMENTS_PER_BLOCK + bit;
+    return block * BITS_PER_BLOCK + bit;
 }
 
 static inline uint32_t index_to_block(bitmap_index_t index)
 {
-    return index / ELEMENTS_PER_BLOCK;
+    return index / BITS_PER_BLOCK;
 }
 
 static inline uint32_t index_to_bit(bitmap_index_t index)
 {
-    return index % ELEMENTS_PER_BLOCK;
+    return index % BITS_PER_BLOCK;
 }
 
 #define reserve_bit(bitmap, bit) (set_bit(bitmap, bit))
@@ -37,7 +37,7 @@ static inline uint32_t index_to_bit(bitmap_index_t index)
 
 struct Bitmap* bitmap_create(uint32_t count, bool initially_reserved)
 {
-    uint32_t length = count / ELEMENTS_PER_BLOCK;
+    uint32_t length = count / BITS_PER_BLOCK;
 
     struct Bitmap* bitmap = malloc(sizeof(struct Bitmap));
 
@@ -148,7 +148,7 @@ bool bitmap_is_available_range(struct Bitmap* bitmap, bitmap_index_t index, uint
 
         if (bitmap->bitmap[block] == 0xFFFFFFFF)
         {
-            found += ELEMENTS_PER_BLOCK - bit;
+            found += BITS_PER_BLOCK - bit;
 
             if (found >= count)
             {
@@ -158,7 +158,7 @@ bool bitmap_is_available_range(struct Bitmap* bitmap, bitmap_index_t index, uint
             continue;
         }
 
-        for (; bit < ELEMENTS_PER_BLOCK; bit++)
+        for (; bit < BITS_PER_BLOCK; bit++)
         {
             if (is_reserved(bitmap->bitmap[block], bit))
             {
@@ -213,14 +213,14 @@ bool bitmap_first_available(struct Bitmap* bitmap, bitmap_index_t* index)
             continue;
         }
 
-        for (; bit < ELEMENTS_PER_BLOCK; bit++)
+        for (; bit < BITS_PER_BLOCK; bit++)
         {
             if (is_reserved(bitmap->bitmap[block], bit))
             {
                 continue;
             }
 
-            uint32_t found_index = block_bit_to_index(block, bit);
+            uint32_t found_index = block_and_bit_to_index(block, bit);
 
             *index = found_index;
 
@@ -248,14 +248,14 @@ bool bitmap_first_available_range(struct Bitmap* bitmap, uint32_t count, bitmap_
             continue;
         }
 
-        for (; bit < ELEMENTS_PER_BLOCK; bit++)
+        for (; bit < BITS_PER_BLOCK; bit++)
         {
             if (is_reserved(bitmap->bitmap[block], bit))
             {
                 continue;
             }
 
-            bitmap_index_t found_index = block_bit_to_index(block, bit);
+            bitmap_index_t found_index = block_and_bit_to_index(block, bit);
 
             if (bitmap_is_available_range(bitmap, found_index, count))
             {
