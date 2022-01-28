@@ -6,11 +6,18 @@
 #include <terminal.h>
 #include <keyboard.h>
 #include <pit.h>
+#include <multiboot.h>
 
-void kernel_main(void)
+void kernel_main(uint32_t magic, multiboot_info_t* memory_map)
 {
     terminal_init();
     printf("Hello, kernel World!\n");
+
+    if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
+    {
+        printf("Kernel loaded with invalid magic number: %x\n", magic);
+        return;
+    }
 
     gdt_init();
     printf("GDT loaded.\n");
