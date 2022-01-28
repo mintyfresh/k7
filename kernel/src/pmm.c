@@ -92,6 +92,8 @@ bool pmm_allocate_page(paddr_t* paddr)
 
     if (bitmap_first_available(bitmap, &index))
     {
+        bitmap_reserve(bitmap, index);
+
         *paddr = index_to_paddr(index);
 
         return true;
@@ -106,6 +108,8 @@ bool pmm_allocate_page_range(paddr_t* paddr, uint32_t count)
 
     if (bitmap_first_available_range(bitmap, count, &index))
     {
+        bitmap_reserve_range(bitmap, index, count);
+
         *paddr = index_to_paddr(index);
 
         return true;
