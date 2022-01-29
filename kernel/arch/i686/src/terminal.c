@@ -101,13 +101,13 @@ void terminal_clear(void)
     terminal_update_cursor();
 }
 
-void terminal_enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
+void terminal_enable_cursor(unsigned cursor_start, unsigned cursor_end)
 {
     outb(0x3D4, 0x0A);
-    outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
+    outb(0x3D5, (inb(0x3D5) & 0xC0) | (cursor_start & 0xFF));
 
     outb(0x3D4, 0x0B);
-    outb(0x3D5, (inb(0x3D5) & 0xE0) | cursor_end);
+    outb(0x3D5, (inb(0x3D5) & 0xE0) | (cursor_end & 0xFF));
 }
 
 void terminal_disable_cursor(void)
@@ -116,11 +116,11 @@ void terminal_disable_cursor(void)
     outb(0x3D5, 0x20);
 }
 
-#define FOREGROUND_MASK 0xF0
-#define BACKGROUND_MASK 0x0F
+#define FOREGROUND_MASK 0x0F
+#define BACKGROUND_MASK 0xF0
 
-#define FOREGROUND_OFFSET 4
-#define BACKGROUND_OFFSET 0
+#define FOREGROUND_OFFSET 0
+#define BACKGROUND_OFFSET 4
 
 void terminal_get_colour(enum TerminalColour* foreground, enum TerminalColour* background)
 {
@@ -157,7 +157,7 @@ void terminal_init(void)
     terminal_buffer = (uint16_t*) 0xC00B8000;
 
     terminal_enable_cursor(0x0E, 0x0F);
-    terminal_set_colour(TERMINAL_BLACK, TERMINAL_WHITE);
+    terminal_set_colour(TERMINAL_WHITE, TERMINAL_BLACK);
 
     terminal_clear();
 }

@@ -2,42 +2,42 @@
 #include <idt.h>
 #include <irq.h>
 #include <keyboard.h>
+#include <logger.h>
 #include <multiboot.h>
 #include <pit.h>
 #include <pmm.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <terminal.h>
 #include <vmm.h>
 
 void kernel_main(uint32_t magic, multiboot_info_t* mbi)
 {
     terminal_init();
-    printf("Hello, kernel World!\n");
+    log_debug("Hello, kernel World!");
 
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
     {
-        printf("Kernel loaded with invalid magic number: %x\n", magic);
+        log_error("Kernel loaded with invalid magic number: %x", magic);
         return;
     }
 
     gdt_init();
-    printf("GDT loaded.\n");
+    log_debug("GDT loaded.");
 
     idt_init();
-    printf("IDT loaded.\n");
+    log_debug("IDT loaded.");
     
     irq_init();
-    printf("IRQ handlers configured.\n");
+    log_debug("IRQ handlers configured.");
 
     pit_init();
-    printf("PIT IRQ configured.\n");
+    log_debug("PIT IRQ configured.");
 
     keyboard_init();
-    printf("Keyboard IRQ configured.\n");
+    log_debug("Keyboard IRQ configured.");
 
     pmm_init(mbi);
-    printf("Physical memory manager initialized.\n");
+    log_debug("Physical memory manager initialized.");
 
     vmm_init();
 

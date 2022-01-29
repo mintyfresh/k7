@@ -25,7 +25,7 @@ enum TerminalColour
 
 void terminal_clear(void);
 
-void terminal_enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
+void terminal_enable_cursor(unsigned cursor_start, unsigned cursor_end);
 void terminal_disable_cursor(void);
 
 void terminal_get_colour(enum TerminalColour* foreground, enum TerminalColour* background);

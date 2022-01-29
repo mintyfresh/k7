@@ -1,4 +1,5 @@
 #include <extmath.h>
+#include <logger.h>
 #include <stdint.h>
 #include <vmm.h>
 
@@ -104,14 +105,12 @@ static bool create_page_table(page_directory_entry_t* pd_entry, unsigned flags)
 {
     paddr_t page_table_address = 0;
 
-    printf("Creating page table...\n");
-
     if (!pmm_allocate_page(&page_table_address))
     {
+        log_error("Failed to allocate page table");
+
         return false;
     }
-
-    printf("page_table_address: %x\n", page_table_address);
 
     // TODO: Add better support for flags on page table creation.
     *pd_entry = page_table_address | PAGE_DIRECTORY_PRESENT | flags;
@@ -125,8 +124,6 @@ bool vmm_map(vaddr_t vaddr, paddr_t paddr, unsigned flags)
 
     if (!is_present(*pd_entry))
     {
-        printf("Not present\n");
-
         if (create_page_table(pd_entry, flags))
         {
             uint32_t pd_index = page_directory_index(vaddr);
@@ -165,8 +162,7 @@ bool vmm_unmap(vaddr_t vaddr)
 
     if (is_large_page(*pd_entry))
     {
-        clear_bit(*pd_entry, PAGE_DIRECTORY_PRESENT);
-        clear_bit(*pd_entry, PAGE_DIRECTORY_LARGE);
+        clear_flag(*pd_entry, PAGE_DIRECTORY_PRESENT);
 
         flush_tlb_single(vaddr);
 
@@ -180,7 +176,7 @@ bool vmm_unmap(vaddr_t vaddr)
         return false;
     }
 
-    clear_bit(*pt_entry, PAGE_TABLE_PRESENT);
+    clear_flag(*pt_entry, PAGE_TABLE_PRESENT);
 
     flush_tlb_single(vaddr);
 
@@ -222,7 +218,7 @@ static inline vmm_identity_map_lower_mem(void)
     // Unmap the first 4MB of memory.
     if (!vmm_unmap(0x00000000))
     {
-        printf("Failed to unmap 0\n");
+        log_error("Failed to unmap 0");
         abort();
     }
 
@@ -231,7 +227,7 @@ static inline vmm_identity_map_lower_mem(void)
     {
         if (!vmm_map((vaddr_t) paddr, paddr, PAGE_TABLE_PRESENT | PAGE_TABLE_READ_WRITE))
         {
-            printf("Failed to map: %x\n", paddr);
+            log_error("Failed to map: %x", paddr);
             abort();
         }
     }
@@ -245,22 +241,22 @@ void vmm_init(void)
 
     if (!vmm_get_paddr((vaddr_t) get_page_directory(), &test))
     {
-        printf("vmm_init: failed to get paddr\n");
+        log_debug("vmm_init: failed to get paddr");
     }
     else
     {
-        printf("vmm_init: paddr = 0x%x\n", test);
+        log_debug("vmm_init: paddr = 0x%x", test);
     }
 
     if (!vmm_get_paddr((vaddr_t) &_kernel_start, &test))
     {
-        printf("vmm_init: failed to get paddr\n");
+        log_debug("vmm_init: failed to get paddr");
     }
     else
     {
-        printf("vmm_init: paddr = 0x%x\n", test);
+        log_debug("vmm_init: paddr = 0x%x", test);
     }
 
-    printf("Test 1: %x\n", *(uint32_t*)(0x09FFFC));
-    printf("Test 2: %x\n", *(uint32_t*)(0x100000));
+    log_debug("Test 1: %x", *(uint32_t*)(0x09FFFC));
+    log_debug("Test 2: %x", *(uint32_t*)(0x100000));
 }

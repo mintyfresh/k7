@@ -1,6 +1,6 @@
 #include <idt.h>
+#include <logger.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #pragma pack(push, 1)
@@ -169,13 +169,13 @@ void isr_handler(struct MachineState* state)
         system_error_message = "Unknown system error";
     }
 
-    printf("Exception: %s (Interrupt %d Error code %d)\n", system_error_message, state->interrupt, state->error_code);
+    log_error("Exception: %s (Interrupt %d Error code %d)", system_error_message, state->interrupt, state->error_code);
 
-    printf("DS: %x ES: %x FS: %x GS: %x SS: %x\n", state->ds, state->es, state->fs, state->gs, state->ss);
-    printf("EBP: %x ESP: %x\n", state->ebp, state->esp);
-    printf("ESI: %x EDI: %x\n", state->esi, state->edi);
-    printf("EAX: %x EBX: %x ECX: %x EDX: %x\n", state->eax, state->ebx, state->ecx, state->edx);
-    printf("EIP: %x CS: %x EFLAGS: %x\n", state->eip, state->cs, state->eflags);
+    log_error("DS: %x ES: %x FS: %x GS: %x SS: %x", state->ds, state->es, state->fs, state->gs, state->ss);
+    log_error("EBP: %x ESP: %x", state->ebp, state->esp);
+    log_error("ESI: %x EDI: %x", state->esi, state->edi);
+    log_error("EAX: %x EBX: %x ECX: %x EDX: %x", state->eax, state->ebx, state->ecx, state->edx);
+    log_error("EIP: %x CS: %x EFLAGS: %x", state->eip, state->cs, state->eflags);
 
     abort();
 }

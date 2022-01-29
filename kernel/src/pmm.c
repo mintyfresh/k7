@@ -1,10 +1,10 @@
 #include <bitmap.h>
 #include <extmath.h>
+#include <logger.h>
 #include <multiboot.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 #include <system.h>
 
@@ -38,13 +38,13 @@ static void pmm_load_memory_map(multiboot_info_t* mbi)
         {
             if (mmap->addr > UINT32_MAX || mmap->addr + mmap->len > UINT32_MAX)
             {
-                printf("Error: Memory map entry exceeds 32-bit address space.\n");
+                log_error("Memory map entry exceeds 32-bit address space.");
                 break;
             }
 
             if ((paddr_t)(mmap->addr + mmap->len) > bitmap_total_count(bitmap) * PAGE_SIZE)
             {
-                printf("Warning: memory map entry exceeds bitmap size.\n");
+                log_error("Memory map entry exceeds bitmap size.");
                 break;
             }
 
@@ -132,15 +132,15 @@ void pmm_init(multiboot_info_t* mbi)
 {
     uint32_t total_memory = mbi->mem_upper * 1024 + (1024 * 1024);
 
-    printf("Total memory: %d MiB\n", total_memory / 1024 / 1024);
+    log_debug("Total memory: %d MiB", total_memory / 1024 / 1024);
 
     pmm_init_bitmap(total_memory);
     pmm_load_memory_map(mbi);
     pmm_reserve_kernel_memory();
 
-    printf("Total memory: %d MiB\n", pmm_total_pages_count() * PAGE_SIZE / 1024 / 1024);
-    printf("Total pages: %d\n", pmm_total_pages_count());
+    log_debug("Total memory: %d MiB", pmm_total_pages_count() * PAGE_SIZE / 1024 / 1024);
+    log_debug("Total pages: %d", pmm_total_pages_count());
 
-    printf("Available memory: %d MiB\n", pmm_free_pages_count() * PAGE_SIZE / 1024 / 1024);
-    printf("Available pages: %d\n", pmm_free_pages_count());
+    log_debug("Available memory: %d MiB", pmm_free_pages_count() * PAGE_SIZE / 1024 / 1024);
+    log_debug("Available pages: %d", pmm_free_pages_count());
 }
