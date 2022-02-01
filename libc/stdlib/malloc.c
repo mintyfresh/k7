@@ -1,8 +1,12 @@
 #define HAVE_MMAP 0
-#define LACKS_UNISTD_H 1
+
 #define LACKS_FCNTL_H 1
+#define LACKS_SYS_PARAM_H 1
+#define LACKS_SYS_MMAN_H 1
+#define LACKS_UNISTD_H 1
+
+// TODO
 #define fprintf(...) ((void)0)
-#define MALLOC_FAILURE_ACTION ((void)0)
 
 /*
   This is a version (aka dlmalloc) of malloc/free/realloc written by
