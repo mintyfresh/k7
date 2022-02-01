@@ -1,8 +1,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "port_io.h"
-#include "terminal.h"
+#include <port_io.h>
+#include <system.h>
+#include <terminal.h>
 
 #define TERMINAL_HEIGHT 25
 #define TERMINAL_WIDTH  80
@@ -154,7 +155,7 @@ void terminal_init(void)
 {
     terminal_row    = 0;
     terminal_col    = 0;
-    terminal_buffer = (uint16_t*) 0xC00B8000;
+    terminal_buffer = (uint16_t*) paddr_to_vaddr(0xB8000);
 
     terminal_enable_cursor(0x0E, 0x0F);
     terminal_set_colour(TERMINAL_WHITE, TERMINAL_BLACK);
