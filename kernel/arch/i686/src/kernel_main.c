@@ -38,8 +38,10 @@ void kernel_main(uint32_t magic, multiboot_info_t* mbi)
 
     pmm_init(mbi);
     log_debug("Physical memory manager initialized.");
+    pmm_display_stats();
 
     vmm_init();
+    log_debug("Virtual memory manager initialized.");
 
     for (;;)
     {

@@ -238,28 +238,5 @@ static inline void vmm_identity_map_lower_mem(void)
 
 void vmm_init(void)
 {
-    paddr_t test = 0;
-
     vmm_identity_map_lower_mem();
-
-    if (!vmm_get_paddr((vaddr_t) get_page_directory(), &test))
-    {
-        log_debug("vmm_init: failed to get paddr");
-    }
-    else
-    {
-        log_debug("vmm_init: paddr = 0x%x", test);
-    }
-
-    if (!vmm_get_paddr((vaddr_t) &_kernel_start, &test))
-    {
-        log_debug("vmm_init: failed to get paddr");
-    }
-    else
-    {
-        log_debug("vmm_init: paddr = 0x%x", test);
-    }
-
-    log_debug("Test 1: %x", *(uint32_t*)(0x09FFFC));
-    log_debug("Test 2: %x", *(uint32_t*)(0x100000));
 }

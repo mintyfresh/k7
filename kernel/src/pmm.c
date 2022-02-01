@@ -130,17 +130,21 @@ uint32_t pmm_total_pages_count(void)
 
 void pmm_init(multiboot_info_t* mbi)
 {
+    // TODO: Figure out what to do with lower memory.
     uint32_t total_memory = mbi->mem_upper * 1024 + (1024 * 1024);
-
-    log_debug("Total memory: %d MiB", total_memory / 1024 / 1024);
 
     pmm_init_bitmap(total_memory);
     pmm_load_memory_map(mbi);
     pmm_reserve_kernel_memory();
+}
 
-    log_debug("Total memory: %d MiB", pmm_total_pages_count() * PAGE_SIZE / 1024 / 1024);
+#define MEGABYTES(x) ((x) * 1024 * 1024)
+
+void pmm_display_stats(void)
+{
+    log_debug("Total memory: %d MiB", MEGABYTES(pmm_total_pages_count() * PAGE_SIZE));
     log_debug("Total pages: %d", pmm_total_pages_count());
 
-    log_debug("Available memory: %d MiB", pmm_free_pages_count() * PAGE_SIZE / 1024 / 1024);
+    log_debug("Available memory: %d MiB", MEGABYTES(pmm_free_pages_count() * PAGE_SIZE));
     log_debug("Available pages: %d", pmm_free_pages_count());
 }
