@@ -1,6 +1,9 @@
 #include <extmath.h>
 #include <logger.h>
+#include <pmm.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include <vmm.h>
 
 typedef uint32_t page_directory_entry_t;
@@ -213,7 +216,7 @@ inline bool vmm_get_paddr(vaddr_t vaddr, paddr_t* paddr)
 
 extern void _kernel_start;
 
-static inline vmm_identity_map_lower_mem(void)
+static inline void vmm_identity_map_lower_mem(void)
 {
     // Unmap the first 4MB of memory.
     if (!vmm_unmap(0x00000000))
